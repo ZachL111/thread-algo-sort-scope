@@ -1,0 +1,73 @@
+{
+  "repo": "thread-algo-sort-scope",
+  "language": "OCaml",
+  "category": "Algorithms",
+  "goal": "Package an OCaml local lab for sort analysis with deny and allow fixtures, explainable decision traces, and documented operating limits.",
+  "review_model": {
+    "terms": [
+      "input width",
+      "search depth",
+      "boundary pressure",
+      "complexity"
+    ],
+    "lanes": [
+      "ship",
+      "watch",
+      "hold"
+    ],
+    "score": "signal * 2 + slack + confidence - drag * 3",
+    "purpose": "surface the domain-specific cases that need the most careful review"
+  },
+  "cases": [
+    {
+      "name": "baseline",
+      "focus": "input width",
+      "signal": 80,
+      "slack": 52,
+      "drag": 13,
+      "confidence": 63,
+      "score": 236,
+      "lane": "ship"
+    },
+    {
+      "name": "stress",
+      "focus": "search depth",
+      "signal": 53,
+      "slack": 24,
+      "drag": 19,
+      "confidence": 49,
+      "score": 122,
+      "lane": "watch"
+    },
+    {
+      "name": "edge",
+      "focus": "boundary pressure",
+      "signal": 67,
+      "slack": 44,
+      "drag": 21,
+      "confidence": 83,
+      "score": 198,
+      "lane": "ship"
+    },
+    {
+      "name": "recovery",
+      "focus": "complexity",
+      "signal": 72,
+      "slack": 41,
+      "drag": 9,
+      "confidence": 54,
+      "score": 212,
+      "lane": "ship"
+    },
+    {
+      "name": "stale",
+      "focus": "input width",
+      "signal": 85,
+      "slack": 25,
+      "drag": 15,
+      "confidence": 47,
+      "score": 197,
+      "lane": "ship"
+    }
+  ]
+}
