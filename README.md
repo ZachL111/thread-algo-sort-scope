@@ -1,43 +1,68 @@
 # thread-algo-sort-scope
 
-thread-algo-sort-scope is a OCaml project for algorithms. It focuses on this technical goal: Package an OCaml local lab for sort analysis with deny and allow fixtures, explainable decision traces, and documented operating limits.
+`thread-algo-sort-scope` explores algorithms in OCaml. The repository keeps the core rule set compact, then surrounds it with examples that show how the decisions move.
 
-## Why it exists
+## Thread Algo Sort Scope Notes
 
-Small engineering tools are easiest to trust when their rules are explicit, testable, and cheap to run locally. This repository packages a focused model with fixture data and a local verification path so behavior can be reviewed without external services.
+The quickest review path is the verifier first, then the fixtures, then the operations note. That order makes it easy to see whether the code, data, and explanation still agree.
 
-## Features
+## Why This Exists
 
-- Deterministic policy scoring over fixture scenarios.
-- Clear accept or review decisions based on a documented threshold.
-- A command-line or local test path for quick validation.
-- Golden fixture data for repeatable checks.
-- Minimal dependencies and a compact project layout.
+This project keeps the domain idea close to the tests. That makes it useful as a reference implementation, a small experiment, or a starting point for a more specialized tool.
 
-## Architecture Notes
+## Implementation Notes
 
-The core module exposes a small scoring API. Inputs are simple numeric signals: demand, capacity, latency, risk, and weight. The score uses a threshold of 160, risk penalty 6, latency penalty 2, and weight bonus 6. Tests exercise the public API against the fixture cases in `fixtures/cases.csv`.
+The interesting part is the boundary between accepted and reviewed scenarios. Extended examples sit near that boundary so future edits can show whether the model became more permissive or more cautious. The OCaml implementation keeps the data record and functions small enough to load directly in the test file.
 
-## Setup
+## Example Scenarios
 
-Install the OCaml toolchain and run commands from the repository root.
+The examples are meant to be readable before they are exhaustive. They cover enough variation to show how latency and risk can pull a decision below the threshold.
 
-## Usage
+## Feature Notes
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
-```
+- Uses fixture data to keep complexity tradeoffs changes visible in code review.
+- Includes extended examples for golden cases, including `surge` and `degraded`.
+- Documents boundary checks tradeoffs in `docs/operations.md`.
+- Runs locally with a single verification command and no external credentials.
+- Stores project constants and verification metadata in `metadata/project.json`.
 
-The verification script builds or runs the project and checks the fixture decisions.
+## Local Setup
+
+The only required setup is the local OCaml toolchain. After cloning, stay in the repo root so fixture paths resolve correctly.
 
 ## Tests
 
 ```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/audit.ps1
+```
+
+The audit command checks repository structure and README constraints before it delegates to the verifier.
+
+## Code Tour
+
+- `src`: primary implementation
+- `tests`: verification harness
+- `fixtures`: compact golden scenarios
+- `examples`: expanded scenario set
+- `metadata`: project constants and verification metadata
+- `docs`: operations and extension notes
+- `scripts`: local verification and audit commands
+
+## Boundaries
+
+The examples cover useful edges, not every edge. A larger version would add malformed-input tests, richer reports, and deeper domain parsers.
+
+## Roadmap
+
+- Add a loader for `examples/extended_cases.csv` and promote selected cases into the language test suite.
+- Add a short report command that prints the score breakdown for a single scenario.
+- Add malformed input fixtures so the failure path is as visible as the happy path.
+- Add one more algorithms fixture that focuses on a malformed or borderline input.
+
+## Try It
+
+```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
-## Limitations And Roadmap
-
-- The fixture set is intentionally small so it can be audited by hand.
-- Future work could add richer domain-specific input adapters.
-- The model is a local demonstration and does not claim production use.
+This runs the language-level build or test path against the compact fixture set.
